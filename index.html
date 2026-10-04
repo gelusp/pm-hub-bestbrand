@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PM Hub · BESTBRAND</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2712%27 fill=%27%231F2933%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Arial,sans-serif%27 font-size=%2728%27 font-weight=%27700%27 fill=%27white%27 text-anchor=%27middle%27%3EBB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --ink:#1F2933;--accent:#2B3A55;--accent-light:#E9EDF4;
+  --green:#3B6D11;--green-light:#EAF3DE;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --grey-100:#F5F5F5;--grey-200:#E8E8E8;
+  --text:#1A1A1A;--text-secondary:#5F5F5F;--text-tertiary:#9E9E9E;
+  --border:#E0E0E0;--bg:#F4F4F2;--white:#FFFFFF;
+  --radius:8px;--radius-lg:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* TOPBAR */
+.topbar{background:var(--ink);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.menu-btn,.back-btn{background:none;border:none;color:rgba(255,255,255,0.8);cursor:pointer;padding:6px;font-size:22px;line-height:1;align-items:center}
+.menu-btn{display:flex}.back-btn{display:none}
+.brand-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:.14em}
+.brand-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-left:4px}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:150}
+.overlay.open{display:block}
+.layout{display:flex;min-height:calc(100vh - 52px)}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;z-index:160;transition:transform .25s ease}
+.sidebar-section{padding:16px 16px 6px;font-size:10px;font-weight:600;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase}
+.home-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;font-size:12px;font-weight:500;color:var(--text-secondary);border-left:2px solid transparent}
+.home-item:hover{background:var(--grey-100)}
+.home-item.active{background:var(--accent-light);border-left-color:var(--accent);color:var(--accent)}
+.proj-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-left:2px solid transparent;transition:background .12s}
+.proj-item:hover{background:var(--grey-100)}
+.proj-item.active{background:var(--accent-light);border-left-color:var(--accent)}
+.proj-icon{width:28px;height:28px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.proj-info{flex:1;min-width:0}
+.proj-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-item.active .proj-name{color:var(--accent)}
+.proj-sublabel{font-size:10px;color:var(--text-tertiary);margin-top:1px}
+.submenu{background:var(--grey-100);border-left:2px solid var(--border);margin-left:16px;display:none}
+.submenu.open{display:block}
+.submenu-item{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;font-size:11.5px;color:var(--text-secondary);transition:background .12s;border-left:2px solid transparent}
+.submenu-item:hover{background:var(--grey-200);color:var(--text)}
+.submenu-item.active{color:var(--accent);font-weight:500;border-left-color:var(--accent);background:var(--accent-light)}
+.submenu-item i{font-size:14px}
+.chevron{margin-left:auto;font-size:12px;color:var(--text-tertiary);transition:transform .2s}
+.chevron.open{transform:rotate(180deg)}
+.sidebar-footer{margin-top:auto;padding:12px 16px;border-top:1px solid var(--border);font-size:10px;color:var(--text-tertiary)}
+
+/* MAIN */
+.main{flex:1;padding:24px;max-width:960px;min-width:0}
+.home-hero{margin-bottom:20px;padding:20px 0 16px;border-bottom:1px solid var(--border)}
+.home-wordmark{font-size:34px;font-weight:700;color:var(--ink);letter-spacing:.16em;line-height:1}
+.home-sep{width:40px;height:2px;background:var(--ink);margin:10px 0 12px}
+.home-label{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+.home-label span{font-weight:400;color:var(--text-tertiary)}
+.proj-header{margin-bottom:16px}
+.proj-title{font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px}
+.proj-meta{font-size:12px;color:var(--text-tertiary)}
+.module-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:3px 10px;border-radius:99px;margin-bottom:14px;background:var(--accent-light);color:var(--accent)}
+.page-footer{padding:20px 0 12px;font-size:10px;color:var(--text-tertiary)}
+.info-box{padding:10px 14px;background:var(--accent-light);border:1px solid #CBD3E1;border-radius:6px;font-size:12px;color:var(--accent);margin-bottom:12px;display:flex;gap:8px;align-items:flex-start}
+
+/* PROJECT CARDS (home) */
+.proj-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:14px}
+.proj-card-header{padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.proj-card-header .proj-icon{width:34px;height:34px;font-size:18px;background:rgba(255,255,255,0.14);color:#fff}
+.proj-card-title{font-size:14px;font-weight:600;color:#fff}
+.proj-card-sub{font-size:10.5px;color:rgba(255,255,255,0.65)}
+.proj-card-links{display:flex;flex-wrap:wrap;border-top:1px solid var(--border)}
+.proj-card-links button{flex:1;min-width:150px;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 12px;background:var(--white);border:none;border-right:1px solid var(--grey-200);font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;font-family:inherit}
+.proj-card-links button:last-child{border-right:none}
+.proj-card-links button:hover{background:var(--grey-100);color:var(--text)}
+.cnt{font-size:10px;font-weight:600;background:var(--grey-200);color:var(--text-secondary);border-radius:99px;padding:1px 7px}
+.cnt.risk{background:var(--red-light);color:var(--red)}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.kpi-label{font-size:11px;color:var(--text-tertiary);margin-bottom:6px}
+.kpi-val{font-size:20px;font-weight:600;color:var(--text);line-height:1.1}
+.kpi-sub{font-size:10px;color:var(--text-tertiary);margin-top:4px}
+
+/* CARDS & TABLES */
+.sec-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px}
+.sec-title{padding:12px 16px 10px;font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--grey-200)}
+.kv-row{display:flex;gap:12px;padding:9px 16px;border-bottom:1px solid var(--grey-100);font-size:12.5px}
+.kv-row:last-child{border-bottom:none}
+.kv-label{width:42%;max-width:260px;color:var(--text-secondary);flex-shrink:0}
+.kv-val{flex:1;color:var(--text);font-weight:500;min-width:0;overflow-wrap:anywhere}
+.kv-val.empty{color:var(--text-tertiary);font-weight:400;font-style:italic}
+.tbl-wrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-size:10px;font-weight:600;color:var(--text-tertiary);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--grey-100);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--grey-100);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td.num,.tbl th.num{text-align:right;white-space:nowrap}
+.tbl tfoot td{font-weight:600;background:var(--grey-100);border-top:1px solid var(--border)}
+.tbl tr.clickable{cursor:pointer}
+.tbl tr.clickable:hover td{background:#FAFAF8}
+.detail-row td{background:var(--grey-100);padding:12px 16px 14px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-size:12px}
+.detail-grid .dl{font-size:10px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:600;white-space:nowrap}
+.st-deschis{background:var(--red-light);color:var(--red)}
+.st-curs{background:var(--amber-light);color:var(--amber)}
+.st-inchis{background:var(--green-light);color:var(--green)}
+.st-neutru{background:var(--grey-200);color:var(--text-secondary)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-tertiary)}
+.empty-state i{font-size:36px;display:block;margin-bottom:10px;color:#C4C4C4}
+.empty-state h3{font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:6px}
+.empty-state p{font-size:12px;max-width:420px;margin:0 auto}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filter-bar button{padding:5px 12px;border:1px solid var(--border);background:var(--white);border-radius:99px;font-size:11.5px;color:var(--text-secondary);cursor:pointer;font-family:inherit}
+.filter-bar button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.link-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--accent);text-decoration:none;font-weight:500}
+.link-btn:hover{text-decoration:underline}
+
+@media(max-width:768px){
+  .brand-sub{display:none}
+  .sidebar{position:fixed;top:52px;left:0;height:calc(100vh - 52px);transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 16px rgba(0,0,0,0.15)}
+  .main{padding:16px}
+  .proj-title{font-size:17px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .detail-grid{grid-template-columns:1fr}
+  .kv-row{flex-direction:column;gap:2px}
+  .kv-label{width:auto;max-width:none;font-size:11px}
+}
+@media(min-width:769px){
+  .menu-btn{display:none}
+  .back-btn{display:none !important}
+}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);padding:16px}
+.login-card{background:var(--white);border-radius:var(--radius-lg);padding:36px 36px 30px;width:100%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,0.35)}
+.login-wordmark{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:.16em;line-height:1}
+.login-sep{width:36px;height:2px;background:var(--ink);margin:9px 0 10px}
+.login-sub{font-size:12.5px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;margin-bottom:26px}
+.login-sub span{font-weight:400;color:var(--text-tertiary)}
+.login-label{font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;display:block}
+.login-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--text);margin-bottom:14px;outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,58,85,.1)}
+.login-btn{width:100%;padding:11px;background:var(--ink);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:4px}
+.login-btn:hover{background:#111820}
+.login-remember{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);margin:0 0 14px;cursor:pointer;user-select:none}
+.login-remember input{width:15px;height:15px;accent-color:var(--ink);cursor:pointer}
+.login-error{font-size:12px;color:var(--red);margin-top:10px;display:none;text-align:center}
+.app-screen{display:none}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.user-name{font-size:12px;color:rgba(255,255,255,0.8)}
+.logout-btn{font-size:11px;color:rgba(255,255,255,0.6);cursor:pointer;background:none;border:none;font-family:inherit;padding:4px 8px;border-radius:4px}
+.logout-btn:hover{color:#fff;background:rgba(255,255,255,0.1)}
+@media(max-width:768px){.user-name{display:none}}
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-wordmark">BESTBRAND</div>
+    <div class="login-sep"></div>
+    <div class="login-sub"><i class="ti ti-layout-dashboard" style="font-size:14px"></i> PM Hub <span>· SC BESTBRAND SRL</span></div>
+    <label class="login-label" for="inp-user">Utilizator</label>
+    <input class="login-input" type="text" id="inp-user" placeholder="Utilizator" autocomplete="username" onkeydown="if(event.key==='Enter') doLogin()">
+    <label class="login-label" for="inp-pass">Parolă</label>
+    <input class="login-input" type="password" id="inp-pass" placeholder="Parolă" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
+    <label class="login-remember"><input type="checkbox" id="inp-remember" checked> Ține-mă minte pe acest calculator</label>
+    <button class="login-btn" onclick="doLogin()">Intră în PM Hub</button>
+    <div class="login-error" id="login-error">Utilizator sau parolă incorecte.</div>
+  </div>
+</div>
+
+<div class="app-screen" id="app-screen">
+
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="menu-btn" id="menu-btn" onclick="openMenu()" aria-label="Meniu"><i class="ti ti-menu-2"></i></button>
+    <button class="back-btn" id="back-btn" onclick="goHome()" aria-label="Înapoi"><i class="ti ti-arrow-left"></i></button>
+    <span class="brand-name" style="cursor:pointer" onclick="goHome()">BESTBRAND</span>
+    <span class="brand-sub">PM Hub</span>
+  </div>
+  <div class="topbar-right">
+    <div class="avatar" id="app-avatar"></div>
+    <span class="user-name" id="app-username"></span>
+    <button class="logout-btn" onclick="doLogout()">Ieșire</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section">General</div>
+    <div class="home-item" id="item-home" onclick="goHome()"><i class="ti ti-home" style="font-size:15px"></i> Pagina principală</div>
+    <div class="sidebar-section">Proiecte active</div>
+    <div id="sidebar-projects"></div>
+    <div class="sidebar-footer">PM Hub · SC BESTBRAND SRL · 2026</div>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+</div>
+
+<script>
+/* =====================================================================
+   LOGIN
+   Parolele sunt stocate ca amprentă SHA-256, nu în clar.
+   Pentru un utilizator nou: nume afișat + hash-ul parolei.
+   ===================================================================== */
+var USERS = {
+  'Bestbrand': {name:'Bestbrand', initials:'BB', hash:'2b5b889f91c9e66bb81464dcf5e7b8de38bad01f121037eeb88205f5cc0992e0'}
+};
+
+function sha256(txt){
+  var data = new TextEncoder().encode(txt);
+  return crypto.subtle.digest('SHA-256', data).then(function(buf){
+    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  });
+}
+function doLogin(){
+  var u = document.getElementById('inp-user').value.trim();
+  var p = document.getElementById('inp-pass').value;
+  var err = document.getElementById('login-error');
+  var key = Object.keys(USERS).filter(function(k){ return k.toLowerCase() === u.toLowerCase(); })[0];
+  if (!key){ err.style.display = 'block'; return; }
+  sha256(p).then(function(h){
+    if (h === USERS[key].hash){
+      err.style.display = 'none';
+      try { sessionStorage.setItem('bb_pmhub_user', key); } catch(e) {}
+      try {
+        if (document.getElementById('inp-remember').checked) localStorage.setItem('bb_pmhub_remember', key);
+        else localStorage.removeItem('bb_pmhub_remember');
+      } catch(e) {}
+      showApp(key);
+    } else {
+      err.style.display = 'block';
+    }
+  }).catch(function(){ err.textContent = 'Browserul nu permite verificarea parolei.'; err.style.display = 'block'; });
+}
+function doLogout(){
+  try { sessionStorage.removeItem('bb_pmhub_user'); } catch(e) {}
+  try { localStorage.removeItem('bb_pmhub_remember'); } catch(e) {}
+  document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('inp-pass').value = '';
+  closeMenu();
+}
+function showApp(key){
+  var name = USERS[key].name;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  document.getElementById('app-avatar').textContent = USERS[key].initials || name.split(' ').map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
+  document.getElementById('app-username').textContent = name;
+  goHome();
+}
+
+/* =====================================================================
+   DATE PROIECTE
+   Se completează aici. Câmpurile goale ('') apar ca „de completat”.
+   ===================================================================== */
+var PROJ = {
+  anaf: {
+    title: 'ANAF Sector 1',
+    status: 'În execuție',
+    icon: 'ti-building-bank',
+    color: '#2B3A55',
+    contract: [
+      ['Beneficiar', ''],
+      ['Obiectul contractului', ''],
+      ['Nr. și data contractului', ''],
+      ['Valoare contract fără TVA', ''],
+      ['Durata de execuție', ''],
+      ['Data începerii lucrărilor', ''],
+      ['Termen de finalizare', ''],
+      ['Sursa de finanțare', ''],
+      ['Garanție de bună execuție', ''],
+      ['Diriginte de șantier', ''],
+      ['Proiectant', '']
+    ],
+    /* Situații de lucrări:
+       {nr:'SL 1', perioada:'Septembrie 2026', valoare:0, status:'Transmisă', link:''}
+       status: Draft · Transmisă · Aprobată · Facturată · Încasată */
+    sl: [],
+    /* Registru probleme:
+       {cod:'P01', categorie:'Tehnic', detaliu:'', valoare:0, termen:'31.10.2026', status:'Deschis',
+        problema:'', cauza:'', impact:'', masuri:'', responsabil:''}
+       categorie: Contractual · Tehnic · Bugetar
+       status: Deschis · În curs · Închis */
+    regpd: []
+  },
+  anl: {
+    title: 'ANL Titu',
+    status: 'În execuție',
+    icon: 'ti-building-community',
+    color: '#3E5641',
+    contract: [
+      ['Beneficiar', ''],
+      ['Obiectul contractului', ''],
+      ['Nr. și data contractului', ''],
+      ['Valoare contract fără TVA', ''],
+      ['Durata de execuție', ''],
+      ['Data începerii lucrărilor', ''],
+      ['Termen de finalizare', ''],
+      ['Sursa de finanțare', ''],
+      ['Garanție de bună execuție', ''],
+      ['Diriginte de șantier', ''],
+      ['Proiectant', '']
+    ],
+    sl: [],
+    regpd: []
+  }
+};
+
+var MODULES = [
+  {key:'contract', label:'Sinteză contract',     icon:'ti-file-dollar',     color:'#2B3A55'},
+  {key:'sl',       label:'Situații de lucrări',  icon:'ti-file-analytics',  color:'#6C3483'},
+  {key:'regpd',    label:'Registru probleme',    icon:'ti-alert-triangle',  color:'#C0392B'}
+];
+
+/* =====================================================================
+   UTILITARE
+   ===================================================================== */
+function fmtLei(v){ return (typeof v === 'number' && v) ? v.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' lei' : ''; }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function openRegCount(p){ return p.regpd.filter(function(x){ return x.status !== 'Închis'; }).length; }
+function footer(){ return '<div class="page-footer">PM Hub · SC BESTBRAND SRL · 2026</div>'; }
+function stClass(s){
+  return {'Deschis':'st-deschis','În curs':'st-curs','Închis':'st-inchis',
+          'Aprobată':'st-inchis','Facturată':'st-inchis','Încasată':'st-inchis','Transmisă':'st-curs'}[s] || 'st-neutru';
+}
+
+/* =====================================================================
+   NAVIGARE
+   ===================================================================== */
+function buildSidebar(){
+  var h = '';
+  Object.keys(PROJ).forEach(function(k){
+    var p = PROJ[k];
+    h += '<div class="proj-item" id="proj-' + k + '" onclick="toggleSub(\'' + k + '\')">' +
+           '<div class="proj-icon" style="background:' + p.color + '1F;color:' + p.color + '"><i class="ti ' + p.icon + '"></i></div>' +
+           '<div class="proj-info"><div class="proj-name">' + esc(p.title) + '</div><div class="proj-sublabel">' + esc(p.status) + '</div></div>' +
+           '<i class="ti ti-chevron-down chevron" id="chev-' + k + '"></i>' +
+         '</div>' +
+         '<div class="submenu" id="sub-' + k + '">';
+    MODULES.forEach(function(m){
+      h += '<div class="submenu-item" id="item-' + k + '-' + m.key + '" onclick="goModule(\'' + k + '\',\'' + m.key + '\')">' +
+             '<i class="ti ' + m.icon + '" style="color:' + m.color + '"></i> ' + m.label + '</div>';
+    });
+    h += '</div>';
+  });
+  document.getElementById('sidebar-projects').innerHTML = h;
+}
+
+function openMenu(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
+function closeMenu(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+function clearActive(){
+  document.querySelectorAll('.submenu-item,.proj-item,.home-item').forEach(function(i){ i.classList.remove('active'); });
+}
+function setBack(fn){
+  var b = document.getElementById('back-btn');
+  b.style.display = 'flex'; b.onclick = fn;
+  document.getElementById('menu-btn').style.display = 'none';
+}
+function openSubOnly(k){
+  document.querySelectorAll('.submenu').forEach(function(s){ s.classList.remove('open'); });
+  document.querySelectorAll('.chevron').forEach(function(c){ c.classList.remove('open'); });
+  document.getElementById('sub-' + k).classList.add('open');
+  document.getElementById('chev-' + k).classList.add('open');
+}
+
+function goHome(){
+  closeMenu(); clearActive();
+  document.querySelectorAll('.submenu').forEach(function(s){ s.classList.remove('open'); });
+  document.querySelectorAll('.chevron').forEach(function(c){ c.classList.remove('open'); });
+  document.getElementById('item-home').classList.add('active');
+  document.getElementById('menu-btn').style.display = '';
+  document.getElementById('back-btn').style.display = 'none';
+  renderHome();
+  window.scrollTo(0,0);
+}
+
+function toggleSub(k){
+  var isOpen = document.getElementById('sub-' + k).classList.contains('open');
+  if (isOpen && document.getElementById('proj-' + k).classList.contains('active')) { goHome(); return; }
+  openSubOnly(k);
+  clearActive();
+  document.getElementById('proj-' + k).classList.add('active');
+  renderProjHome(k);
+  setBack(goHome);
+  document.getElementById('menu-btn').style.display = '';
+}
+
+function goModule(k, mod){
+  openSubOnly(k);
+  clearActive();
+  document.getElementById('proj-' + k).classList.add('active');
+  var it = document.getElementById('item-' + k + '-' + mod);
+  if (it) it.classList.add('active');
+  closeMenu();
+  setBack(function(){ toggleSubForce(k); });
+  if (mod === 'contract') renderContract(k);
+  else if (mod === 'sl') renderSL(k);
+  else if (mod === 'regpd') renderRegPD(k);
+  window.scrollTo(0,0);
+}
+function toggleSubForce(k){
+  openSubOnly(k); clearActive();
+  document.getElementById('proj-' + k).classList.add('active');
+  renderProjHome(k); setBack(goHome);
+}
+
+/* =====================================================================
+   PAGINA PRINCIPALĂ
+   ===================================================================== */
+function renderHome(){
+  var h = '<div class="home-hero">' +
+            '<div class="home-wordmark">BESTBRAND</div>' +
+            '<div class="home-sep"></div>' +
+            '<div class="home-label"><i class="ti ti-layout-dashboard" style="font-size:14px"></i> PM Hub <span>· SC BESTBRAND SRL</span></div>' +
+          '</div>';
+  Object.keys(PROJ).forEach(function(k){
+    var p = PROJ[k], nOpen = openRegCount(p);
+    h += '<div class="proj-card">' +
+           '<div class="proj-card-header" style="background:' + p.color + '" onclick="toggleSub(\'' + k + '\')">' +
+             '<div class="proj-icon"><i class="ti ' + p.icon + '"></i></div>' +
+             '<div style="flex:1;min-width:0"><div class="proj-card-title">' + esc(p.title) + '</div>' +
+             '<div class="proj-card-sub">' + esc(p.status) + '</div></div>' +
+             '<i class="ti ti-chevron-right" style="color:rgba(255,255,255,0.7);font-size:18px"></i>' +
+           '</div>' +
+           '<div class="proj-card-links">' +
+             '<button onclick="goModule(\'' + k + '\',\'contract\')"><i class="ti ti-file-dollar"></i> Sinteză contract</button>' +
+             '<button onclick="goModule(\'' + k + '\',\'sl\')"><i class="ti ti-file-analytics"></i> Situații de lucrări <span class="cnt">' + p.sl.length + '</span></button>' +
+             '<button onclick="goModule(\'' + k + '\',\'regpd\')"><i class="ti ti-alert-triangle"></i> Registru probleme <span class="cnt' + (nOpen ? ' risk' : '') + '">' + nOpen + ' deschise</span></button>' +
+           '</div>' +
+         '</div>';
+  });
+  h += footer();
+  document.getElementById('main').innerHTML = h;
+}
+
+/* =====================================================================
+   PAGINA PROIECT
+   ===================================================================== */
+function renderProjHome(k){
+  var p = PROJ[k];
+  var slTotal = p.sl.reduce(function(s,x){ return s + (x.valoare || 0); }, 0);
+  var h = '<div class="proj-header"><div class="proj-title">' + esc(p.title) + '</div><div class="proj-meta">' + esc(p.status) + '</div></div>';
+  h += '<div class="kpi-grid">' +
+         '<div class="kpi"><div class="kpi-label">Valoare contract fără TVA</div><div class="kpi-val">' + (esc(contractVal(p,'Valoare contract fără TVA')) || '<span style="font-size:13px;font-weight:400;color:var(--text-tertiary)">de completat</span>') + '</div><div class="kpi-sub">din Sinteză contract</div></div>' +
+         '<div class="kpi"><div class="kpi-label">Situații de lucrări</div><div class="kpi-val">' + p.sl.length + '</div><div class="kpi-sub">Cumulat: ' + fmtLei(slTotal) + '</div></div>' +
+         '<div class="kpi"><div class="kpi-label">Probleme deschise</div><div class="kpi-val" style="' + (openRegCount(p) ? 'color:var(--red)' : '') + '">' + openRegCount(p) + '</div><div class="kpi-sub">din ' + p.regpd.length + ' înregistrate</div></div>' +
+         '<div class="kpi"><div class="kpi-label">Termen de finalizare</div><div class="kpi-val" style="font-size:16px">' + (esc(contractVal(p,'Termen de finalizare')) || '<span style="font-size:13px;font-weight:400;color:var(--text-tertiary)">de completat</span>') + '</div><div class="kpi-sub">din Sinteză contract</div></div>' +
+       '</div>';
+  h += '<div class="sec-card"><div class="sec-title"><i class="ti ti-layout-list"></i> Module</div><div class="proj-card-links" style="border-top:none">';
+  MODULES.forEach(function(m){
+    h += '<button onclick="goModule(\'' + k + '\',\'' + m.key + '\')"><i class="ti ' + m.icon + '" style="color:' + m.color + '"></i> ' + m.label + '</button>';
+  });
+  h += '</div></div>' + footer();
+  document.getElementById('main').innerHTML = h;
+}
+function contractVal(p, label){
+  for (var i = 0; i < p.contract.length; i++) if (p.contract[i][0] === label) return p.contract[i][1];
+  return '';
+}
+
+/* =====================================================================
+   MODUL: SINTEZĂ CONTRACT
+   ===================================================================== */
+function renderContract(k){
+  var p = PROJ[k];
+  var h = '<div class="proj-header"><div class="proj-title">Sinteză contract</div><div class="proj-meta">' + esc(p.title) + '</div></div>';
+  h += '<div class="module-badge"><i class="ti ti-file-dollar"></i> Sinteză contract</div>';
+  var filled = p.contract.filter(function(r){ return r[1]; }).length;
+  if (!filled) h += '<div class="info-box"><i class="ti ti-info-circle" style="font-size:15px;margin-top:1px"></i><span>Datele contractului nu au fost încă introduse.</span></div>';
+  h += '<div class="sec-card"><div class="sec-title"><i class="ti ti-file-text"></i> Date contract</div>';
+  p.contract.forEach(function(r){
+    h += '<div class="kv-row"><div class="kv-label">' + esc(r[0]) + '</div><div class="kv-val' + (r[1] ? '' : ' empty') + '">' + (r[1] ? esc(r[1]) : 'de completat') + '</div></div>';
+  });
+  h += '</div>' + footer();
+  document.getElementById('main').innerHTML = h;
+}
+
+/* =====================================================================
+   MODUL: SITUAȚII DE LUCRĂRI
+   ===================================================================== */
+function renderSL(k){
+  var p = PROJ[k];
+  var h = '<div class="proj-header"><div class="proj-title">Situații de lucrări</div><div class="proj-meta">' + esc(p.title) + '</div></div>';
+  h += '<div class="module-badge"><i class="ti ti-file-analytics"></i> Situații de lucrări</div>';
+  if (!p.sl.length){
+    h += '<div class="sec-card"><div class="empty-state"><i class="ti ti-file-analytics"></i><h3>Nicio situație de lucrări adăugată</h3><p>Situațiile lunare vor apărea aici, cu valoare, cumulat și status.</p></div></div>';
+  } else {
+    var cum = 0, total = 0;
+    h += '<div class="sec-card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Nr.</th><th>Perioadă</th><th class="num">Valoare fără TVA</th><th class="num">Cumulat</th><th>Status</th><th></th></tr></thead><tbody>';
+    p.sl.forEach(function(x){
+      cum += (x.valoare || 0); total += (x.valoare || 0);
+      h += '<tr><td style="font-weight:600">' + esc(x.nr) + '</td><td>' + esc(x.perioada) + '</td>' +
+           '<td class="num">' + fmtLei(x.valoare) + '</td><td class="num">' + fmtLei(cum) + '</td>' +
+           '<td><span class="pill ' + stClass(x.status) + '">' + esc(x.status || '') + '</span></td>' +
+           '<td>' + (x.link ? '<a class="link-btn" href="' + esc(x.link) + '" target="_blank"><i class="ti ti-external-link"></i> Deschide</a>' : '') + '</td></tr>';
+    });
+    h += '</tbody><tfoot><tr><td colspan="2">Total</td><td class="num">' + fmtLei(total) + '</td><td></td><td></td><td></td></tr></tfoot></table></div></div>';
+  }
+  h += footer();
+  document.getElementById('main').innerHTML = h;
+}
+
+/* =====================================================================
+   MODUL: REGISTRU PROBLEME
+   ===================================================================== */
+var _regFilter = 'toate';
+function renderRegPD(k, filter){
+  var p = PROJ[k];
+  if (filter) _regFilter = filter;
+  var items = p.regpd.slice().sort(function(a,b){ return String(a.cod).localeCompare(String(b.cod)); });
+  var nD = items.filter(function(x){ return x.status === 'Deschis'; }).length;
+  var nC = items.filter(function(x){ return x.status === 'În curs'; }).length;
+  var nI = items.filter(function(x){ return x.status === 'Închis'; }).length;
+  var expus = items.reduce(function(s,x){ return s + (x.status !== 'Închis' && typeof x.valoare === 'number' ? x.valoare : 0); }, 0);
+
+  var h = '<div class="proj-header"><div class="proj-title">Registru probleme în execuție</div><div class="proj-meta">' + esc(p.title) + '</div></div>';
+  h += '<div class="module-badge" style="background:var(--red-light);color:var(--red)"><i class="ti ti-alert-triangle"></i> Registru probleme</div>';
+  h += '<div class="kpi-grid">' +
+         '<div class="kpi"><div class="kpi-label">Deschise</div><div class="kpi-val" style="color:var(--red)">' + nD + '</div></div>' +
+         '<div class="kpi"><div class="kpi-label">În curs</div><div class="kpi-val" style="color:var(--amber)">' + nC + '</div></div>' +
+         '<div class="kpi"><div class="kpi-label">Închise</div><div class="kpi-val" style="color:var(--green)">' + nI + '</div></div>' +
+         '<div class="kpi"><div class="kpi-label">Valoare expusă</div><div class="kpi-val" style="font-size:16px">' + fmtLei(expus) + '</div><div class="kpi-sub">probleme nerezolvate</div></div>' +
+       '</div>';
+
+  if (!items.length){
+    h += '<div class="sec-card"><div class="empty-state"><i class="ti ti-clipboard-check"></i><h3>Nicio problemă înregistrată</h3><p>Problemele identificate în execuție vor apărea aici, cu categorie, termen, status și detalii.</p></div></div>';
+  } else {
+    var opts = [['toate','Toate'],['Deschis','Deschise'],['În curs','În curs'],['Închis','Închise']];
+    h += '<div class="filter-bar">';
+    opts.forEach(function(o){ h += '<button class="' + (_regFilter === o[0] ? 'on' : '') + '" onclick="renderRegPD(\'' + k + '\',\'' + o[0] + '\')">' + o[1] + '</button>'; });
+    h += '</div>';
+    var shown = _regFilter === 'toate' ? items : items.filter(function(x){ return x.status === _regFilter; });
+    h += '<div class="sec-card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Cod</th><th>Categorie</th><th>Detaliu</th><th class="num">Valoare</th><th>Termen</th><th>Status</th></tr></thead><tbody>';
+    if (!shown.length) h += '<tr><td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:18px">Nicio problemă cu acest status.</td></tr>';
+    shown.forEach(function(x, i){
+      var id = 'reg-' + k + '-' + i;
+      h += '<tr class="clickable" onclick="toggleDetail(\'' + id + '\')"><td style="font-weight:600">' + esc(x.cod) + '</td><td>' + esc(x.categorie) + '</td><td>' + esc(x.detaliu) + '</td>' +
+           '<td class="num">' + fmtLei(x.valoare) + '</td><td style="white-space:nowrap">' + esc(x.termen || '') + '</td>' +
+           '<td><span class="pill ' + stClass(x.status) + '">' + esc(x.status) + '</span></td></tr>';
+      h += '<tr class="detail-row" id="' + id + '" style="display:none"><td colspan="6"><div class="detail-grid">' +
+             det('Problema', x.problema) + det('Cauza', x.cauza) + det('Impact', x.impact) + det('Măsuri', x.masuri) + det('Responsabil', x.responsabil) +
+           '</div></td></tr>';
+    });
+    h += '</tbody></table></div></div>';
+  }
+  h += footer();
+  document.getElementById('main').innerHTML = h;
+}
+function det(l, v){ return '<div><div class="dl">' + l + '</div><div>' + (v ? v : '') + '</div></div>'; }
+function toggleDetail(id){ var r = document.getElementById(id); r.style.display = r.style.display === 'none' ? '' : 'none'; }
+
+/* START */
+buildSidebar();
+(function(){
+  var saved = null;
+  try { saved = sessionStorage.getItem('bb_pmhub_user'); } catch(e) {}
+  if (!saved) { try { saved = localStorage.getItem('bb_pmhub_remember'); } catch(e) {} }
+  if (saved && USERS[saved]) showApp(saved);
+  else document.getElementById('inp-user').focus();
+})();
+</script>
+</body>
+</html>
